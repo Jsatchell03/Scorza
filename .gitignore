@@ -39,3 +39,5 @@ lib/ominfan-e31c7-firebase-adminsdk-putlv-d22e1fef1f.json
 
 app-example
 .gitignore
+temp.json
+__pycache__/

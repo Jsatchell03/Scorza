@@ -6,7 +6,7 @@ import functools
 load_dotenv()
 API_KEY = os.getenv("THESPORTSDB_API_KEY")
 BASE_URL = "https://www.thesportsdb.com/api"
-TIMEOUT = 10
+TIMEOUT = 5
 HEADERS = {
     "X-API-KEY": f"{API_KEY}",
     "Content-Type": "application/json",
