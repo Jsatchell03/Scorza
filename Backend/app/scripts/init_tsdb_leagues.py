@@ -13,8 +13,6 @@ Get league info -> get teams in league
                 add to db
 """
 
-# , , , ,  , , Premiership Rugby
-
 from ..services import thesportsdb_service as tsdb
 
 # List of league ids to add
