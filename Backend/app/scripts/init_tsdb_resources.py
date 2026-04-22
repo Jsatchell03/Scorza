@@ -82,7 +82,7 @@ Get league info -> get teams in league
 from ..services import thesportsdb_service as tsdb
 from ..infra.gcp.storage import upload_from_url
 from ..data import models as models
-from ..data.repo import LeagueRepo, ExternalIdRepo
+from ..data.repo import LeagueRepo, ExternalIdRepo, TeamRepo
 from ..infra.supabase.client import SupabaseDB
 from supabase import create_client
 import json
@@ -104,6 +104,7 @@ client = create_client(url, key)
 db = SupabaseDB(client)
 leagues = LeagueRepo(db)
 external_ids = ExternalIdRepo(db)
+teams = TeamRepo(db)
 
 
 def upload_badge(res, name):
@@ -165,31 +166,49 @@ location; TEXT
 """
 
 
-def add_team(tsdb_id, league_id=None):
+def add_team(tsdb_id, league=None):
+    if teams.get_by_external_id(tsdb_id, "tsdb"):
+        print("Team already added")
+        return
 
     res = tsdb.get_team(tsdb_id)
-
     team_name = res.get("strTeam", None)
     if not team_name:
         raise tsdb.TheSportsDBError("Incomplete Team")
-    if not league_id:
+
+    if not league:
         tsdb_league_id = res.get("idLeague", None)
         if tsdb_league_id:
-            get_row_from_external_id(tsdb_league_id)
+            league = leagues.get_by_external_id(tsdb_league_id, "tsdb")
         else:
-            league_id = None
+            league = None
 
-    team_doc = {
-        "id": None,
-        "name": team_name,
-        "main_league_id": league_id,
-        "location": res.get("strLocation", None),
-        "logo_location": upload_badge(res, team_name),
-        "sport_id": None,
-    }
+    sport_id = None
+    main_league_id = None
+    if league:
+        main_league_id = league["id"]
+        sport_id = league["sport_id"]
 
-    print(f"{team_doc["name"]} added.")
-    print(team_doc)
+    team = models.Team(
+        id=None,
+        name=team_name,
+        main_league_id=main_league_id,
+        location=res.get("strLocation", None),
+        logo_location=upload_badge(res, team_name),
+        sport_id=sport_id,
+    )
+
+    team_id = teams.insert(team)
+    external_id = models.External_Id(
+        entity_type="team",
+        entity_id=team_id,
+        external_provider="tsdb",
+        external_id=tsdb_id,
+    )
+
+    external_ids.insert(external_id)
+
+    print(f"{team_name} added.")
 
 
 def add_event(tsdb_id):
@@ -220,9 +239,9 @@ def add_event(tsdb_id):
     # )
     # print("Added " + label)
 
-    explored_events.add(tsdb_id)
-
 
 if __name__ == "__main__":
     clear_console()
-    add_league("4328")
+    for team in tsdb.get_league_teams("4328"):
+
+        add_team(team.get("idTeam"))

@@ -12,7 +12,12 @@ class SupabaseDB:
         )
 
     def get_by_id(self, table, id):
-        return self.client.table(table).select("*").eq("id", id).single().execute()
+        query_result = self.client.table(table).select("*").eq("id", id).execute()
+        if len(query_result.data) > 1:
+            raise ValueError("Query returned more than 1 value")
+        if len(query_result.data) == 0:
+            return None
+        return query_result.data[0]
 
     def get_by(self, table, col, value):
         return self.client.table(table).select("*").eq(col, value).single().execute()
