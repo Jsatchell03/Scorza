@@ -41,3 +41,6 @@ app-example
 .gitignore
 temp.json
 __pycache__/
+data/
+testing/
+keys/

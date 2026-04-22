@@ -4,11 +4,10 @@ from dotenv import load_dotenv
 import functools
 
 load_dotenv()
-API_KEY = os.getenv("THESPORTSDB_API_KEY")
 BASE_URL = "https://www.thesportsdb.com/api"
 TIMEOUT = 5
 HEADERS = {
-    "X-API-KEY": f"{API_KEY}",
+    "X-API-KEY": f"{os.getenv("THESPORTSDB_API_KEY")}",
     "Content-Type": "application/json",
 }
 
@@ -30,8 +29,10 @@ def v2_request_decorator(func):
 
             if not data or not data.get(request["type"]):
                 raise TheSportsDBError(data.get("Message", "Empty response from API"))
-
-            return data.get(request["type"])
+            if request["type"] == "lookup":
+                return data.get(request["type"])[0]
+            else:
+                return data.get(request["type"])
 
         except requests.exceptions.HTTPError as e:
             raise TheSportsDBError(f"HTTP error: {e}")
@@ -76,6 +77,13 @@ def get_league_teams(id):
 
 
 @v2_request_decorator
+def get_team(id):
+    url = f"{BASE_URL}/v2/json/lookup/team/{id}"
+    request_type = "lookup"
+    return {"url": url, "type": request_type}
+
+
+@v2_request_decorator
 def get_team_schedule(id):
     url = f"{BASE_URL}/v2/json/schedule/full/team/{id}"
     request_type = "schedule"
@@ -106,5 +114,12 @@ def get_event_lineup(id):
 @v2_request_decorator
 def get_event_stats(id):
     url = f"{BASE_URL}/v2/json/lookup/event_stats/{id}"
+    request_type = "lookup"
+    return {"url": url, "type": request_type}
+
+
+@v2_request_decorator
+def get_venue(id):
+    url = f"{BASE_URL}/v2/json/lookup/venue/{id}"
     request_type = "lookup"
     return {"url": url, "type": request_type}
