@@ -35,8 +35,7 @@ const LeagueBadge: React.FC<LeagueBadgeProps> = ({
     setErrored(false);
   }, [badgeUrl]);
 
-  const showImage = !!badgeUrl && !errored;
-
+  const showImage = badgeUrl != undefined && !errored;
   return (
     <View
       style={{
@@ -54,7 +53,9 @@ const LeagueBadge: React.FC<LeagueBadgeProps> = ({
           source={{ uri: badgeUrl }}
           style={{ width: box, height: box }}
           resizeMode="contain"
-          onError={() => setErrored(true)}
+          onError={(e) => {setErrored(true)
+          }}
+
         />
       ) : (
         <Text style={{ fontSize: font }}>{SPORT_GLYPH[sport]}</Text>

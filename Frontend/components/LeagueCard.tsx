@@ -13,7 +13,6 @@ interface LeagueCardProps {
 const LeagueCard: React.FC<LeagueCardProps> = ({ league, onPress }) => {
   const { followedLeagueIds, toggleFollowLeague } = useApp();
   const followed = followedLeagueIds.has(league.id);
-
   return (
     <Pressable
       onPress={onPress}
