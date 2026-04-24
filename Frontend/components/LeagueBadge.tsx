@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image } from "react-native";
 import { Sport } from "../types";
 
 const SPORT_GLYPH: Record<Sport, string> = {
@@ -12,6 +12,7 @@ const SPORT_GLYPH: Record<Sport, string> = {
 interface LeagueBadgeProps {
   sport: Sport;
   color: string;
+  badgeUrl?: string;
   size?: "sm" | "md" | "lg";
 }
 
@@ -24,21 +25,40 @@ const SIZES = {
 const LeagueBadge: React.FC<LeagueBadgeProps> = ({
   sport,
   color,
+  badgeUrl,
   size = "md",
 }) => {
   const { box, font, radius } = SIZES[size];
+  const [errored, setErrored] = useState(false);
+
+  useEffect(() => {
+    setErrored(false);
+  }, [badgeUrl]);
+
+  const showImage = !!badgeUrl && !errored;
+
   return (
     <View
       style={{
         width: box,
         height: box,
         borderRadius: radius,
-        backgroundColor: color,
+        backgroundColor: showImage ? "#ffffff" : color,
         alignItems: "center",
         justifyContent: "center",
+        overflow: "hidden",
       }}
     >
-      <Text style={{ fontSize: font }}>{SPORT_GLYPH[sport]}</Text>
+      {showImage ? (
+        <Image
+          source={{ uri: badgeUrl }}
+          style={{ width: box, height: box }}
+          resizeMode="contain"
+          onError={() => setErrored(true)}
+        />
+      ) : (
+        <Text style={{ fontSize: font }}>{SPORT_GLYPH[sport]}</Text>
+      )}
     </View>
   );
 };

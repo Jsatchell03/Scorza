@@ -13,6 +13,7 @@ export interface Team {
   sport: Sport;
   leagueId: string;
   color: string;
+  badge_url?: string;
 }
 
 export interface League {
@@ -21,6 +22,7 @@ export interface League {
   sport: Sport;
   country: string;
   color: string;
+  badge_url?: string;
 }
 
 export interface PendingUpdate {

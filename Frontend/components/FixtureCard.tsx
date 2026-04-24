@@ -56,7 +56,12 @@ const FixtureCard: React.FC<FixtureCardProps> = ({ fixture, onPress }) => {
 
       <View className="flex-row items-center">
         <View className="flex-1 flex-row items-center">
-          <TeamBadge shortName={home.shortName} color={home.color} size="md" />
+          <TeamBadge
+            shortName={home.shortName}
+            color={home.color}
+            badgeUrl={home.badge_url}
+            size="md"
+          />
           <View className="ml-3 flex-1">
             <Text
               className={`text-[15px] ${
@@ -83,7 +88,12 @@ const FixtureCard: React.FC<FixtureCardProps> = ({ fixture, onPress }) => {
 
       <View className="mt-3 flex-row items-center">
         <View className="flex-1 flex-row items-center">
-          <TeamBadge shortName={away.shortName} color={away.color} size="md" />
+          <TeamBadge
+            shortName={away.shortName}
+            color={away.color}
+            badgeUrl={away.badge_url}
+            size="md"
+          />
           <View className="ml-3 flex-1">
             <Text
               className={`text-[15px] ${

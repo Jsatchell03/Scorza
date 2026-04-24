@@ -28,7 +28,12 @@ const LeagueCard: React.FC<LeagueCardProps> = ({ league, onPress }) => {
         borderColor: "#f1f2f5",
       }}
     >
-      <LeagueBadge sport={league.sport} color={league.color} size="md" />
+      <LeagueBadge
+        sport={league.sport}
+        color={league.color}
+        badgeUrl={league.badge_url}
+        size="md"
+      />
       <View className="ml-3 flex-1">
         <Text className="text-[15px] font-semibold text-dark" numberOfLines={1}>
           {league.name}

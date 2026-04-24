@@ -79,6 +79,7 @@ const TeamInfoScreen: React.FC = () => {
             <TeamBadge
               shortName={team.shortName}
               color={team.color}
+              badgeUrl={team.badge_url}
               size="xl"
             />
             <Text className="mt-3 text-[22px] font-extrabold text-dark">

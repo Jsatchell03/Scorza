@@ -82,6 +82,7 @@ const LeagueInfoScreen: React.FC = () => {
             <LeagueBadge
               sport={league.sport}
               color={league.color}
+              badgeUrl={league.badge_url}
               size="lg"
             />
             <Text className="mt-3 text-[22px] font-extrabold text-dark">

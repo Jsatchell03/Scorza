@@ -28,7 +28,12 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onPress }) => {
         borderColor: "#f1f2f5",
       }}
     >
-      <TeamBadge shortName={team.shortName} color={team.color} size="md" />
+      <TeamBadge
+        shortName={team.shortName}
+        color={team.color}
+        badgeUrl={team.badge_url}
+        size="md"
+      />
       <View className="ml-3 flex-1">
         <Text className="text-[15px] font-semibold text-dark" numberOfLines={1}>
           {team.name}

@@ -101,6 +101,7 @@ const FixtureInfoScreen: React.FC = () => {
                 <TeamBadge
                   shortName={home.shortName}
                   color={home.color}
+                  badgeUrl={home.badge_url}
                   size="xl"
                 />
                 <Text
@@ -141,6 +142,7 @@ const FixtureInfoScreen: React.FC = () => {
                 <TeamBadge
                   shortName={away.shortName}
                   color={away.color}
+                  badgeUrl={away.badge_url}
                   size="xl"
                 />
                 <Text

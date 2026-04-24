@@ -82,6 +82,7 @@ const ScoreUpdateModal: React.FC<ScoreUpdateModalProps> = ({
             name={home.name}
             shortName={home.shortName}
             color={home.color}
+            badgeUrl={home.badge_url}
             score={homeScore}
             onChange={(v) => setHomeScore(v)}
             onBump={(d) => bump("home", d)}
@@ -93,6 +94,7 @@ const ScoreUpdateModal: React.FC<ScoreUpdateModalProps> = ({
             name={away.name}
             shortName={away.shortName}
             color={away.color}
+            badgeUrl={away.badge_url}
             score={awayScore}
             onChange={(v) => setAwayScore(v)}
             onBump={(d) => bump("away", d)}
@@ -131,6 +133,7 @@ interface TeamScoreRowProps {
   name: string;
   shortName: string;
   color: string;
+  badgeUrl?: string;
   score: number;
   onChange: (value: number) => void;
   onBump: (delta: number) => void;
@@ -140,13 +143,19 @@ const TeamScoreRow: React.FC<TeamScoreRowProps> = ({
   name,
   shortName,
   color,
+  badgeUrl,
   score,
   onChange,
   onBump,
 }) => (
   <View>
     <View className="flex-row items-center">
-      <TeamBadge shortName={shortName} color={color} size="md" />
+      <TeamBadge
+        shortName={shortName}
+        color={color}
+        badgeUrl={badgeUrl}
+        size="md"
+      />
       <View className="ml-3 flex-1">
         <Text className="text-[15px] font-semibold text-dark" numberOfLines={1}>
           {name}
