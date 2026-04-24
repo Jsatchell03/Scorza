@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useApp } from "../context/AppContext";
@@ -23,6 +23,7 @@ const FixtureInfoScreen: React.FC = () => {
   const { fixtureId } = route.params;
   const { getFixtureById, addPendingUpdate, confirmPendingUpdate, dismissPendingUpdate } =
     useApp();
+  const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
 
   const fixture = getFixtureById(fixtureId);
@@ -51,7 +52,11 @@ const FixtureInfoScreen: React.FC = () => {
       <ScreenHeader title="Fixture" onBack={() => navigation.goBack()} />
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: isLive ? 120 : 32 }}
+        contentContainerStyle={{
+          paddingBottom: isLive
+            ? 110 + Math.max(insets.bottom, 16)
+            : 32 + insets.bottom,
+        }}
         showsVerticalScrollIndicator={false}
       >
         <View className="px-5">
@@ -224,11 +229,12 @@ const FixtureInfoScreen: React.FC = () => {
 
       {isLive ? (
         <View
-          className="absolute inset-x-0 bottom-0 px-5 pb-6 pt-3"
+          className="absolute inset-x-0 bottom-0 px-5 pt-3"
           style={{
             backgroundColor: "rgba(253,252,251,0.95)",
             borderTopWidth: 1,
             borderTopColor: "#f1f2f5",
+            paddingBottom: Math.max(insets.bottom, 16),
           }}
         >
           <Pressable

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useApp } from "../context/AppContext";
@@ -23,6 +23,7 @@ const LeagueInfoScreen: React.FC = () => {
   const route = useRoute<Rte>();
   const { leagueId } = route.params;
   const { fixtures, followedLeagueIds, toggleFollowLeague } = useApp();
+  const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>("upcoming");
 
   const league = getLeagueById(leagueId);
@@ -67,7 +68,7 @@ const LeagueInfoScreen: React.FC = () => {
       <ScreenHeader title="League" onBack={() => navigation.goBack()} />
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 32 }}
+        contentContainerStyle={{ paddingBottom: 32 + insets.bottom }}
         showsVerticalScrollIndicator={false}
       >
         <View className="px-5">

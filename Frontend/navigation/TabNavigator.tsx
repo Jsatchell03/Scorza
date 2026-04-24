@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import HomeScreen from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
 import AccountScreen from "../screens/AccountScreen";
@@ -41,28 +42,31 @@ const TabIcon: React.FC<{ name: keyof TabParamList; focused: boolean }> = ({
   </View>
 );
 
-const TabNavigator: React.FC = () => (
-  <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarStyle: {
-        backgroundColor: "#ffffff",
-        borderTopColor: "#eef0f3",
-        borderTopWidth: 1,
-        height: 72,
-        paddingTop: 8,
-        paddingBottom: 10,
-      },
-      tabBarIcon: ({ focused }) => (
-        <TabIcon name={route.name} focused={focused} />
-      ),
-    })}
-  >
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="Search" component={SearchScreen} />
-    <Tab.Screen name="Account" component={AccountScreen} />
-  </Tab.Navigator>
-);
+const TabNavigator: React.FC = () => {
+  const insets = useSafeAreaInsets();
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: "#ffffff",
+          borderTopColor: "#eef0f3",
+          borderTopWidth: 1,
+          height: 64 + insets.bottom,
+          paddingTop: 8,
+          paddingBottom: Math.max(insets.bottom, 10),
+        },
+        tabBarIcon: ({ focused }) => (
+          <TabIcon name={route.name} focused={focused} />
+        ),
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
+    </Tab.Navigator>
+  );
+};
 
 export default TabNavigator;

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useApp } from "../context/AppContext";
@@ -22,6 +22,7 @@ const TeamInfoScreen: React.FC = () => {
   const route = useRoute<Rte>();
   const { teamId } = route.params;
   const { fixtures, followedTeamIds, toggleFollowTeam } = useApp();
+  const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>("upcoming");
 
   const team = getTeamById(teamId);
@@ -64,7 +65,7 @@ const TeamInfoScreen: React.FC = () => {
       <ScreenHeader title="Team" onBack={() => navigation.goBack()} />
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 32 }}
+        contentContainerStyle={{ paddingBottom: 32 + insets.bottom }}
         showsVerticalScrollIndicator={false}
       >
         <View className="px-5">
