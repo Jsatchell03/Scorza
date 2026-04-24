@@ -81,12 +81,19 @@ Get league info -> get teams in league
 
 from ..services import thesportsdb_service as tsdb
 from ..infra.gcp.storage import upload_from_url
-from ..data import models as models
-from ..data.repo import LeagueRepo, ExternalIdRepo, TeamRepo
+from ..data import models
+from ..data.repo import (
+    LeagueRepo,
+    ExternalIdRepo,
+    TeamRepo,
+    FixtureRepo,
+    FixtureTeamsRepo,
+)
 from ..infra.supabase.client import SupabaseDB
 from supabase import create_client
 import json
 import os
+from datetime import datetime, timezone
 
 
 def clear_console():
@@ -95,7 +102,7 @@ def clear_console():
 
 
 # List of league ids to add
-leagues_to_add = [4328]
+leagues_to_add = ["4328"]
 
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_SECRET_KEY")
@@ -105,6 +112,15 @@ db = SupabaseDB(client)
 leagues = LeagueRepo(db)
 external_ids = ExternalIdRepo(db)
 teams = TeamRepo(db)
+fixtures = FixtureRepo(db)
+fixture_teams = FixtureTeamsRepo(db)
+added_leagues = external_ids.get_provider_ids(
+    "tsdb", models.Entity_Type("league").value
+)
+added_teams = external_ids.get_provider_ids("tsdb", models.Entity_Type("team").value)
+added_fixtures = external_ids.get_provider_ids(
+    "tsdb", models.Entity_Type("fixture").value
+)
 
 
 def upload_badge(res, name):
@@ -125,10 +141,13 @@ location: TEXT (e.g England, North America, Europe, .etc)
 """
 
 
-def add_league(tsdb_id):
-    if leagues.get_by_external_id(tsdb_id, "tsdb"):
+def add_league(tsdb_id, get=False):
+    if tsdb_id in added_leagues:
         print("League already added")
-        return
+        if get:
+            return leagues.get_by_external_id(tsdb_id, "tsdb")
+        else:
+            return
 
     res = tsdb.get_league(tsdb_id)
     league_name = res.get("strLeague", None)
@@ -145,7 +164,7 @@ def add_league(tsdb_id):
         sport_id=None,
     )
 
-    league_id = leagues.insert(league)
+    league_id = leagues.insert(league).id
     external_id = models.External_Id(
         entity_type="league",
         entity_id=league_id,
@@ -155,6 +174,10 @@ def add_league(tsdb_id):
 
     external_ids.insert(external_id)
     print(f"{league_name} added.")
+    added_leagues.add(tsdb_id)
+
+    if get:
+        return league
 
 
 """
@@ -166,11 +189,13 @@ location; TEXT
 """
 
 
-def add_team(tsdb_id, league=None):
-    if teams.get_by_external_id(tsdb_id, "tsdb"):
+def add_team(tsdb_id, league=None, get=False):
+    if tsdb_id in added_teams:
         print("Team already added")
-        return
-
+        if get:
+            return teams.get_by_external_id(tsdb_id)
+        else:
+            return
     res = tsdb.get_team(tsdb_id)
     team_name = res.get("strTeam", None)
     if not team_name:
@@ -178,16 +203,20 @@ def add_team(tsdb_id, league=None):
 
     if not league:
         tsdb_league_id = res.get("idLeague", None)
-        if tsdb_league_id:
+        if tsdb_league_id in added_leagues:
             league = leagues.get_by_external_id(tsdb_league_id, "tsdb")
         else:
-            league = None
+            try:
+                league = add_league(tsdb_league_id)
+            except (ValueError, tsdb.TheSportsDBError):
+                league = None
 
     sport_id = None
     main_league_id = None
+
     if league:
-        main_league_id = league["id"]
-        sport_id = league["sport_id"]
+        main_league_id = league.id
+        sport_id = league.sport_id
 
     team = models.Team(
         id=None,
@@ -198,7 +227,7 @@ def add_team(tsdb_id, league=None):
         sport_id=sport_id,
     )
 
-    team_id = teams.insert(team)
+    team_id = teams.insert(team).id
     external_id = models.External_Id(
         entity_type="team",
         entity_id=team_id,
@@ -209,39 +238,109 @@ def add_team(tsdb_id, league=None):
     external_ids.insert(external_id)
 
     print(f"{team_name} added.")
+    added_teams.add(tsdb_id)
+
+    if get:
+        return team
 
 
-def add_event(tsdb_id):
-    try:
-        res = tsdb.get_event(tsdb_id)
-    except tsdb.TheSportsDBError as error:
-        print(error)
+# Broken
+# Adds 2 teams
+def add_fixture(tsdb_id, add_new_league=True):
+    res = tsdb.get_fixture(tsdb_id)
+    tsdb_league = res.get("idLeague", None)
+    if tsdb_league:
+        if tsdb_league in added_leagues:
+            league_id = leagues.get_by_external_id(res["idLeague"], "tsdb").id
+        elif add_new_league:
+            league_id = add_league(tsdb_league, get=True).id
+    tsdb_status = res.get("strStatus", None)
+    if tsdb_status:
+        try:
+            status = models.Fixture_Status(tsdb_status).value
+        except ValueError:
+            status = None
+    start_date = res.get("dateEvent", None)
+    start_time = res.get("strTime", None)
+    if start_date and start_time:
+        start = datetime.strptime(
+            f"{start_date} {start_time}", "%Y-%m-%d %H:%M:%S"
+        ).replace(tzinfo=timezone.utc)
+        start_date = start.date()
+    elif start_date:
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    else:
+        start = None
+        start_date = None
 
-    # league_id =  res["idLeague"]
-    # status = res["strStatus"]
-    # fixture = {
-    #     "league_id": res.get("idLeague", None),
-    #     "label": label,
-    #     "status": status,
-    # }
-    # if status != "Not Started":
-    #     fixture["home_score"] = tsdb_res["intHomeScore"]
-    #     fixture["away_score"] = tsdb_res["intAwayScore"]
+    fixture = models.Fixture(
+        id=None,
+        league_id=league_id,
+        start=start,
+        start_date=start_date,
+        status=status,
+        label=None,
+    )
 
-    # db["fixtures"].append(fixture)
-    # db["external_ids"].append(
-    #     {
-    #         "entity_type": "fixture",
-    #         "entity_id": fixture_id,
-    #         "external_id": tsdb_id,
-    #         "source": "tsdb",
-    #     }
-    # )
-    # print("Added " + label)
+    fixture_id = fixtures.insert(fixture).id
+
+    external_id = models.External_Id(
+        entity_type="fixture",
+        entity_id=fixture_id,
+        external_provider="tsdb",
+        external_id=tsdb_id,
+    )
+    external_ids.insert(external_id)
+
+    added_fixtures.add(tsdb_id)
+
+    tsdb_home = res.get("idHomeTeam", None)
+    tsdb_away = res.get("idAwayTeam", None)
+
+    if tsdb_home:
+        if tsdb_home in added_teams:
+            team_id = teams.get_by_external_id(tsdb_home, "tsdb").id
+        else:
+            team_id = teams.insert(add_team(tsdb_home, get=True)).id
+        if fixture.status == "finished":
+            score = res.get("intHomeScore", None)
+        else:
+            score = None
+        home_team = models.Fixture_Team(
+            fixture_id=fixture_id, team_id=team_id, score=score, is_winner=None
+        )
+
+    if tsdb_away:
+        if tsdb_away in added_teams:
+            team_id = teams.get_by_external_id(tsdb_away, "tsdb").id
+        else:
+            team_id = teams.insert(add_team(tsdb_away, get=True)).id
+        if fixture.status == "finished":
+            score = res.get("intAwayScore", None)
+        else:
+            score = None
+        away_team = models.Fixture_Team(
+            fixture_id=fixture_id, team_id=team_id, score=score, is_winner=None
+        )
+
+    if fixture.status == "finished":
+        if home_team.score > away_team.score:
+            home_team.is_winner = True
+        if away_team.score > home_team.score:
+            away_team.is_winner = True
+
+    fixture_teams.insert(home_team)
+    fixture_teams.insert(away_team)
 
 
 if __name__ == "__main__":
     clear_console()
-    for team in tsdb.get_league_teams("4328"):
-
-        add_team(team.get("idTeam"))
+    add_fixture("2267391")
+    # for league_id in leagues_to_add:
+    #     league = add_league(league_id)
+    #     for team in tsdb.get_league_teams(league_id):
+    #         team_id = team.get("idTeam")
+    #         add_team(team_id, league=league)
+    # for event in tsdb.get_team_schedule(team_id):
+    #     event_id = event.get("idEvent")
+    #     add_event(event_id)

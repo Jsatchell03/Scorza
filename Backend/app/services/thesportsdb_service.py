@@ -98,21 +98,21 @@ def get_event_streaming(id):
 
 
 @v2_request_decorator
-def get_event(id):
+def get_fixture(id):
     url = f"{BASE_URL}/v2/json/lookup/event/{id}"
     request_type = "lookup"
     return {"url": url, "type": request_type}
 
 
 @v2_request_decorator
-def get_event_lineup(id):
+def get_fixture_lineup(id):
     url = f"{BASE_URL}/v2/json/lookup/event_lineup/{id}"
     request_type = "lookup"
     return {"url": url, "type": request_type}
 
 
 @v2_request_decorator
-def get_event_stats(id):
+def get_fixture_stats(id):
     url = f"{BASE_URL}/v2/json/lookup/event_stats/{id}"
     request_type = "lookup"
     return {"url": url, "type": request_type}

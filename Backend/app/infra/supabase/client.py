@@ -3,13 +3,7 @@ class SupabaseDB:
         self.client = client
 
     def insert(self, table, value):
-        return (
-            self.client.table(table)
-            .insert(
-                value.model_dump(exclude_unset=True, exclude_none=True, mode="json")
-            )
-            .execute()
-        )
+        return self.client.table(table).insert(value).execute()
 
     def get_by_id(self, table, id):
         query_result = self.client.table(table).select("*").eq("id", id).execute()
