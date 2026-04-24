@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Scorza",
+    "slug": "scorza",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#fdfcfb"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#fdfcfb"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
