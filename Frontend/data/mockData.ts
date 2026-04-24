@@ -229,13 +229,6 @@ export const teams: Team[] = [
     sport: "Rugby",
     leagueId: "l_ncr",
     color: "#D50032",
-  },{
-    id: "t_",
-    name: "UIC Rugby Club",
-    shortName: "UICR",
-    sport: "Rugby",
-    leagueId: "l_ncr",
-    color: "#D50032",
   }
 
 ];
