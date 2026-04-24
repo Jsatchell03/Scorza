@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import ScreenHeader from "../components/ScreenHeader";
 import { useApp } from "../context/AppContext";
 
@@ -42,6 +43,7 @@ const Row: React.FC<{ label: string; value?: string; icon: string }> = ({
 
 const AccountScreen: React.FC = () => {
   const { followedTeamIds, followedLeagueIds, fixtures } = useApp();
+  const tabBarHeight = useBottomTabBarHeight();
   const pending = fixtures.reduce((n, f) => n + f.pendingUpdates.length, 0);
 
   return (
@@ -49,7 +51,11 @@ const AccountScreen: React.FC = () => {
       <ScreenHeader title="Account" subtitle="Your fan profile" />
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: 32 }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 12,
+          paddingBottom: tabBarHeight + 24,
+        }}
         showsVerticalScrollIndicator={false}
       >
         <View

@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useApp } from "../context/AppContext";
 import FixtureCard from "../components/FixtureCard";
 import SegmentedToggle from "../components/SegmentedToggle";
@@ -16,6 +17,7 @@ type Tab = "upcoming" | "past";
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<Nav>();
   const { fixtures } = useApp();
+  const tabBarHeight = useBottomTabBarHeight();
   const [tab, setTab] = useState<Tab>("upcoming");
 
   const { liveCount, visible } = useMemo(() => {
@@ -65,7 +67,11 @@ const HomeScreen: React.FC = () => {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 32 }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 16,
+          paddingBottom: tabBarHeight + 24,
+        }}
         showsVerticalScrollIndicator={false}
       >
         {tab === "upcoming" && liveCount > 0 ? (

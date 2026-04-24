@@ -3,6 +3,7 @@ import { View, Text, TextInput, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { leagues, teams } from "../data/mockData";
 import TeamCard from "../components/TeamCard";
 import LeagueCard from "../components/LeagueCard";
@@ -14,6 +15,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 const SearchScreen: React.FC = () => {
   const navigation = useNavigation<Nav>();
+  const tabBarHeight = useBottomTabBarHeight();
   const [query, setQuery] = useState("");
 
   const { filteredTeams, filteredLeagues } = useMemo(() => {
@@ -67,7 +69,11 @@ const SearchScreen: React.FC = () => {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 32 }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 16,
+          paddingBottom: tabBarHeight + 24,
+        }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
