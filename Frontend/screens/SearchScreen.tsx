@@ -82,7 +82,7 @@ const SearchScreen: React.FC = () => {
             {filteredLeagues.length > 0 ? (
               <>
                 <SectionHeader
-                  label="Leagues"
+                  label="Popular Leagues"
                   count={filteredLeagues.length}
                 />
                 {filteredLeagues.map((l) => (
@@ -98,7 +98,7 @@ const SearchScreen: React.FC = () => {
             ) : null}
             {filteredTeams.length > 0 ? (
               <>
-                <SectionHeader label="Teams" count={filteredTeams.length} />
+                <SectionHeader label="Popular Teams" count={filteredTeams.length} />
                 {filteredTeams.map((t) => (
                   <TeamCard
                     key={t.id}

@@ -14,10 +14,11 @@ export const leagues: League[] = [
     badge_url:
       "https://storage.googleapis.com/scorza-provider-assets/english_premier_league_badge.png",
   },
-  {id: "l_ncr", name: "National Colligiate Rugby", sport: "Rugby", country: "USA", color:"#2c9842", badge_url:"https://cdn.prod.website-files.com/634d92e873a503490ca604f3/634de4a7f814305598471653_Logo%20-%20Full%20Color.png"}
+  {id: "l_ncr", name: "National Collegiate Rugby", sport: "Rugby", country: "USA", color:"#2c9842", badge_url:"https://cdn.prod.website-files.com/634d92e873a503490ca604f3/634de4a7f814305598471653_Logo%20-%20Full%20Color.png"}
 ];
 
 export const teams: Team[] = [
+  
   {
     id: "t_ars",
     name: "Arsenal",
@@ -25,6 +26,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#EF0107",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/arsenal_badge.png"
   },
   {
     id: "t_avl",
@@ -33,6 +35,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#670E36",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/aston_villa_badge.png"
   },
   {
     id: "t_bou",
@@ -41,6 +44,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#DA291C",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/bournemouth_badge.png"
   },
   {
     id: "t_bre",
@@ -49,6 +53,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#E30613",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/brentford_badge.png"
   },
   {
     id: "t_bha",
@@ -57,6 +62,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#0057B8",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/brighton_and_hove_albion_badge.png"
   },
   {
     id: "t_bur",
@@ -65,6 +71,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#6C1D45",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/burnley_badge.png"
   },
   {
     id: "t_che",
@@ -73,6 +80,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#034694",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/chelsea_badge.png"
   },
   {
     id: "t_cry",
@@ -81,6 +89,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#1B458F",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/crystal_palace_badge.png"
   },
   {
     id: "t_eve",
@@ -89,6 +98,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#003399",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/everton_badge.png"
   },
   {
     id: "t_ful",
@@ -97,6 +107,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#1D1D1D",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/fulham_badge.png"
   },
   {
     id: "t_lee",
@@ -105,6 +116,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#FFCD00",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/leeds_united_badge.png"
   },
   {
     id: "t_liv",
@@ -113,6 +125,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#C8102E",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/liverpool_badge.png"
   },
   {
     id: "t_mci",
@@ -121,6 +134,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#6CABDD",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/manchester_city_badge.png"
   },
   {
     id: "t_mun",
@@ -129,6 +143,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#DA291C",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/manchester_united_badge.png"
   },
   {
     id: "t_new",
@@ -137,6 +152,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#241F20",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/newcastle_united_badge.png"
   },
   {
     id: "t_nfo",
@@ -145,6 +161,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#DD0000",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/nottingham_forest_badge.png"
   },
   {
     id: "t_sun",
@@ -153,6 +170,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#EB172B",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/sunderland_badge.png"
   },
   {
     id: "t_tot",
@@ -161,6 +179,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#132257",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/tottenham_hotspur_badge.png"
   },
   {
     id: "t_whu",
@@ -169,6 +188,7 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#7A263A",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/west_ham_united_badge.png"
   },
   {
     id: "t_wol",
@@ -177,7 +197,47 @@ export const teams: Team[] = [
     sport: "Football",
     leagueId: "l_epl",
     color: "#FDB913",
+    badge_url: "https://storage.googleapis.com/scorza-provider-assets/wolverhampton_wanderers_badge.png"
   },
+  {
+    id: "t_lrf",
+    name: "Loyola Rugby Football Club",
+    shortName: "LRF",
+    sport: "Rugby",
+    leagueId: "l_ncr",
+    color: "#5A0722",
+  },
+  {
+    id: "t_nrfc",
+    name: "Northwestern Rugby Club",
+    shortName: "NR",
+    sport:"Rugby",
+    leagueId: "l_ncr",
+     color:"#4E2A84"
+    },
+  {
+    id: "t_ucrf",
+    name: "UChicago Rugby Club",
+    shortName: "UCR",
+    sport: "Rugby",
+    leagueId: "l_ncr",
+    color: "#800000",
+  },{
+    id: "t_uicrf",
+    name: "UIC Rugby Club",
+    shortName: "UICR",
+    sport: "Rugby",
+    leagueId: "l_ncr",
+    color: "#D50032",
+  },{
+    id: "t_",
+    name: "UIC Rugby Club",
+    shortName: "UICR",
+    sport: "Rugby",
+    leagueId: "l_ncr",
+    color: "#D50032",
+  }
+
 ];
 
 export const initialFixtures: Fixture[] = [
@@ -191,7 +251,7 @@ export const initialFixtures: Fixture[] = [
     venue: "Emirates Stadium",
     homeScore: 1,
     awayScore: 1,
-    period: "2nd Half · 68'",
+    period: "2nd Half",
     pendingUpdates: [
       {
         id: "p_1",
@@ -219,7 +279,7 @@ export const initialFixtures: Fixture[] = [
     venue: "Anfield",
     homeScore: 2,
     awayScore: 0,
-    period: "1st Half · 35'",
+    period: "1st Half",
     pendingUpdates: [],
   },
   {
