@@ -2,7 +2,8 @@ export type Sport =
   | "Football"
   | "Basketball"
   | "American Football"
-  | "Baseball";
+  | "Baseball"
+  | "Rugby";
 
 export type FixtureStatus = "live" | "upcoming" | "past";
 

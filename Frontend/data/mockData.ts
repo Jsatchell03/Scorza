@@ -13,6 +13,7 @@ export const leagues: League[] = [
     color: "#3D195B",
     badge_url: "https://storage.googleapis.com/scorza-provider-assets/english_premier_league_badge.png"
   },
+  {id: "l_ncr", name: "National Colligiate Rugby", sport: "Rugby", country: "USA", color:"#2c9842", badge_url:"https://cdn.prod.website-files.com/634d92e873a503490ca604f3/634de4a7f814305598471653_Logo%20-%20Full%20Color.png"}
 ];
 
 export const teams: Team[] = [

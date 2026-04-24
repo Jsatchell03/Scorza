@@ -7,6 +7,7 @@ const SPORT_GLYPH: Record<Sport, string> = {
   Basketball: "🏀",
   "American Football": "🏈",
   Baseball: "⚾",
+  Rugby: "🏉"
 };
 
 interface LeagueBadgeProps {
