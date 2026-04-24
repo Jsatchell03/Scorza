@@ -89,7 +89,7 @@ const SearchScreen: React.FC = () => {
               <>
                 <SectionHeader
                   label="Popular Leagues"
-                  count={filteredLeagues.length}
+                  
                 />
                 {filteredLeagues.map((l) => (
                   <LeagueCard
@@ -104,7 +104,7 @@ const SearchScreen: React.FC = () => {
             ) : null}
             {filteredTeams.length > 0 ? (
               <>
-                <SectionHeader label="Popular Teams" count={filteredTeams.length} />
+                <SectionHeader label="Popular Teams"  />
                 {filteredTeams.map((t) => (
                   <TeamCard
                     key={t.id}
@@ -123,15 +123,13 @@ const SearchScreen: React.FC = () => {
   );
 };
 
-const SectionHeader: React.FC<{ label: string; count: number }> = ({
+const SectionHeader: React.FC<{ label: string}> = ({
   label,
-  count,
 }) => (
   <View className="mb-2 mt-1 flex-row items-center justify-between">
     <Text className="text-[12px] font-bold uppercase tracking-wider text-muted">
       {label}
     </Text>
-    <Text className="text-[12px] font-semibold text-muted">{count}</Text>
   </View>
 );
 
