@@ -80,7 +80,6 @@ Get league info -> get teams in league
 
 
 from ..services import thesportsdb_service as tsdb
-from ..infra.gcp.storage import upload_from_url
 from ..data import models
 from ..data.repo import (
     LeagueRepo,
@@ -123,16 +122,6 @@ added_fixtures = external_ids.get_provider_ids(
 )
 
 
-def upload_badge(res, name):
-    logo_url = res.get("strBadge", None)
-    if not logo_url:
-        logo_location = None
-    else:
-        logo_name = name.lower().replace(" ", "_") + "_badge"
-        logo_location = upload_from_url(logo_url, "scorza-provider-assets", logo_name)
-    return logo_location
-
-
 """
 League Schema
 id: UUID
@@ -149,31 +138,18 @@ def add_league(tsdb_id, get=False):
         else:
             return
 
-    res = tsdb.get_league(tsdb_id)
-    league_name = res.get("strLeague", None)
-    if not league_name:
-        raise tsdb.TheSportsDBError("Incomplete League")
+    league = tsdb.get_league(tsdb_id)
 
-    league = models.League(
-        id=None,
-        name=league_name,
-        location=res.get("strCountry", None),
-        logo_location=upload_badge(res, league_name),
-        rules=None,
-        is_community_sourced=False,
-        sport_id=None,
-    )
-
-    league_id = leagues.insert(league).id
+    league.id = leagues.insert(league).id
     external_id = models.External_Id(
         entity_type="league",
-        entity_id=league_id,
+        entity_id=league.id,
         external_provider="tsdb",
         external_id=tsdb_id,
     )
 
     external_ids.insert(external_id)
-    print(f"{league_name} added.")
+    print(f"{league.name} added.")
     added_leagues.add(tsdb_id)
 
     if get:
@@ -290,6 +266,7 @@ def add_fixture(tsdb_id, add_new_league=True):
         external_provider="tsdb",
         external_id=tsdb_id,
     )
+
     external_ids.insert(external_id)
 
     added_fixtures.add(tsdb_id)
