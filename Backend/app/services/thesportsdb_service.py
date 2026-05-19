@@ -2,6 +2,8 @@ import requests
 import os
 from dotenv import load_dotenv
 import functools
+from ..data.models import League, Team
+from ..infra.gcp.storage import upload_from_url
 
 load_dotenv()
 BASE_URL = "https://www.thesportsdb.com/api"
@@ -16,6 +18,46 @@ class TheSportsDBError(Exception):
     """Custom exception for TheSportsDB API errors."""
 
     pass
+
+
+def upload_badge(res, name):
+    logo_url = res.get("strBadge", None)
+    if not logo_url:
+        logo_location = None
+    else:
+        logo_name = name.lower().replace(" ", "_") + "_badge"
+        logo_location = upload_from_url(logo_url, "scorza-provider-assets", logo_name)
+    return logo_location
+
+
+def parse_team(res):
+    pass
+
+
+def v2_request(url, type):
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+        response.raise_for_status()
+        data = response.json()
+
+        if not data:
+            raise TheSportsDBError(data.get("Message", "Empty response from API"))
+        if type == "lookup":
+            return data.get(type)[0]
+        else:
+            return data.get(type)
+
+    except requests.exceptions.HTTPError as e:
+        raise TheSportsDBError(f"HTTP error: {e}")
+
+    except requests.exceptions.ConnectionError:
+        raise TheSportsDBError("Connection error")
+
+    except requests.exceptions.Timeout:
+        raise TheSportsDBError("Request timed out")
+
+    except requests.exceptions.RequestException as e:
+        raise TheSportsDBError(f"Request failed: {e}")
 
 
 def v2_request_decorator(func):
@@ -62,18 +104,29 @@ def search_league_name(name):
     return {"url": url, "type": request_type}
 
 
-@v2_request_decorator
 def get_league(id):
     url = f"{BASE_URL}/v2/json/lookup/league/{id}"
     request_type = "lookup"
-    return {"url": url, "type": request_type}
+    res = v2_request(url, request_type)
+
+    if not res.get("strLeague", None):
+        raise TheSportsDBError("Incomplete League")
+
+    return League(
+        id=None,
+        name=res["strLeague"],
+        location=res.get("strCountry", None),
+        logo_location=upload_badge(res, res["strLeague"]),
+        rules=None,
+        is_community_sourced=False,
+        sport_id=None,
+    )
 
 
-@v2_request_decorator
 def get_league_teams(id):
     url = f"{BASE_URL}/v2/json/list/teams/{id}"
     request_type = "list"
-    return {"url": url, "type": request_type}
+    res = v2_request(url, request_type)
 
 
 @v2_request_decorator
@@ -123,3 +176,7 @@ def get_venue(id):
     url = f"{BASE_URL}/v2/json/lookup/venue/{id}"
     request_type = "lookup"
     return {"url": url, "type": request_type}
+
+
+if __name__ == "__main__":
+    print(get_league_teams(4328))
